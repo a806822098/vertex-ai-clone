@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 导入中国风主题 */
+@import './styles/theme.css';
+
+@layer base {
+  html {
+    @apply bg-vertex-bg-primary text-vertex-text-primary;
+  }
+  
+  body {
+    @apply bg-vertex-bg-primary min-h-screen antialiased;
+  }
+
+  /* Custom scrollbar for dark theme */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-vertex-bg-secondary;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-vertex-border rounded-full hover:bg-vertex-text-tertiary;
+  }
+
+  /* Firefox scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #404040 #252525;
+  }
+}
+
+@layer components {
+  /* Reusable button styles */
+  .btn-primary {
+    @apply bg-vertex-accent hover:bg-vertex-accent-hover text-white px-4 py-2 rounded-lg transition-colors duration-200;
+  }
+
+  .btn-secondary {
+    @apply bg-vertex-bg-secondary hover:bg-vertex-bg-tertiary text-vertex-text-primary px-4 py-2 rounded-lg transition-colors duration-200 border border-vertex-border;
+  }
+
+  /* Input styles */
+  .input-primary {
+    @apply bg-vertex-bg-secondary border border-vertex-border rounded-lg px-4 py-2 text-vertex-text-primary placeholder-vertex-text-tertiary focus:outline-none focus:ring-2 focus:ring-vertex-accent focus:border-transparent transition-all duration-200;
+  }
+
+  /* Card styles */
+  .card {
+    @apply bg-vertex-bg-secondary rounded-lg border border-vertex-border;
+  }
+}

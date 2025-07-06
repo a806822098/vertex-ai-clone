@@ -1,0 +1,87 @@
+# 依赖目录
+node_modules/
+.pnpm-store/
+
+# 生产构建目录
+dist/
+dist-ssr/
+build/
+out/
+
+# 本地环境文件
+.env
+.env.local
+.env.*.local
+*.local
+
+# 日志文件
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# 编辑器目录和文件
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.swp
+*.swo
+*.sw?
+*~
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# 测试覆盖率
+coverage/
+*.lcov
+.nyc_output/
+
+# TypeScript缓存
+*.tsbuildinfo
+
+# 临时文件
+*.tmp
+*.temp
+.cache/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 调试文件
+.vscode/launch.json
+
+# 备份文件
+*.bak
+*.backup
+backup.log
+
+# 密钥和证书（重要！）
+*.pem
+*.key
+*.crt
+*.p12
+.env*
+
+# 数据库文件
+*.sqlite
+*.sqlite3
+*.db
+
+# 自动生成的文件
+.eslintcache
+.stylelintcache
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+# 自动备份日志
+auto-backup.log
