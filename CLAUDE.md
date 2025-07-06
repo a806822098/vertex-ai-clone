@@ -4,7 +4,33 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Vertex AI Clone web application - a React-based chat interface that allows users to connect to custom AI/LLM API endpoints. The application mimics Google Vertex AI's interface while providing flexibility to use any compatible API.
+This is an AI Transfer Station Manager (AI中转站管理器) - a React-based chat interface specifically designed for Chinese developers to manage and connect to multiple custom AI/LLM API endpoints. The application provides complete flexibility to configure any compatible API without hardcoded provider restrictions.
+
+## 🎮 Git快捷命令（超级小白版）
+
+### 日常使用只需记住这三个词：
+- 想保存进度时说：**'保存一下'** 或 **'save'**
+- 想备份到云端时说：**'备份到GitHub'** 或 **'backup'**
+- 想看历史记录时说：**'显示历史'** 或 **'history'**
+- 想撤销更改时说：**'撤销'** 或 **'undo'**
+
+### Claude会自动理解并执行：
+- '保存' / '存一下' / 'save' → 执行 `./save.sh`
+- '备份' / '上传' / '推送' / 'backup' → 执行 `./backup.sh`
+- '撤销' / '退回' / 'undo' → 执行 `./undo.sh`
+- '历史' / '记录' / 'log' → 执行 `./history.sh`
+
+### 智能理解功能：
+- "恢复到[时间]的版本" → 自动查找并恢复到指定时间的版本
+- "这个文件是什么时候改的" → 查询特定文件的修改历史
+- "最近改了什么" → 显示最近的更改内容
+- "回到昨天的版本" → 智能识别时间并恢复
+
+### 自动化行为：
+- 每次重大修改后会提醒您备份
+- 检测到大量删除时自动创建备份点
+- 发现代码冲突时提供解决方案
+- 定期提醒您查看未提交的更改
 
 ## Key Commands
 
