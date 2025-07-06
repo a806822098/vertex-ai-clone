@@ -181,14 +181,19 @@ function ModelList() {
                     
                     <button
                       onClick={() => handleDeleteModel(model.id)}
-                      className={`p-2 rounded-lg transition-all ${
+                      className={`group relative p-2 rounded-lg transition-all duration-200 ${
                         deleteConfirmId === model.id
-                          ? 'bg-red-600 text-white'
-                          : 'text-gray-400 hover:text-red-400 hover:bg-gray-800'
+                          ? 'bg-red-600 text-white animate-pulse'
+                          : 'text-gray-400 hover:text-red-400 hover:bg-red-500/10 hover:scale-110'
                       }`}
-                      title={deleteConfirmId === model.id ? '确认删除' : '删除'}
+                      title={deleteConfirmId === model.id ? '再次点击确认删除' : '删除模型'}
                     >
                       <TrashIcon className="w-5 h-5" />
+                      {deleteConfirmId === model.id && (
+                        <span className="absolute -top-10 left-1/2 -translate-x-1/2 px-3 py-1 bg-red-600 text-white text-xs rounded-lg whitespace-nowrap animate-bounce">
+                          再次点击确认删除
+                        </span>
+                      )}
                     </button>
                   </div>
                 </div>

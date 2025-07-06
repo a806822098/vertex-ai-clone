@@ -192,35 +192,41 @@ function ChatInterface({ apiEndpoint, apiKey, advancedApiConfig, conversationId,
   }
 
   return (
-    <div className="flex-1 flex flex-col bg-vertex-bg-primary">
-      {/* Action Buttons */}
-      <div className="absolute top-4 right-4 z-40 flex gap-2">
+    <div className="flex-1 flex flex-col bg-vertex-bg-primary relative">
+      {/* Action Buttons - 重新设计位置避免遮挡 */}
+      <div className="absolute top-20 right-6 z-30 flex flex-col gap-3">
         {/* Prompt Library Button */}
         <button
           onClick={() => setShowPromptLibrary(!showPromptLibrary)}
           className={clsx(
-            'p-3 rounded-lg shadow-md transition-all duration-200',
+            'group relative p-3 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105',
             showPromptLibrary 
-              ? 'bg-purple-600 text-white hover:bg-purple-700' 
-              : 'bg-white text-gray-600 hover:text-gray-900 hover:shadow-lg'
+              ? 'bg-gradient-to-br from-purple-600 to-purple-700 text-white shadow-purple-500/25' 
+              : 'bg-white/90 backdrop-blur-sm text-gray-700 hover:text-purple-600 hover:shadow-xl border border-gray-100'
           )}
           title={t('chat.openPromptLibrary')}
         >
           <BookOpenIcon className="w-5 h-5" />
+          <span className="absolute right-full mr-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+            提示词库
+          </span>
         </button>
 
         {/* AI Studio Toggle Button */}
         <button
           onClick={() => setShowAIStudio(!showAIStudio)}
           className={clsx(
-            'p-3 rounded-lg shadow-md transition-all duration-200',
+            'group relative p-3 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105',
             showAIStudio 
-              ? 'bg-blue-600 text-white hover:bg-blue-700' 
-              : 'bg-white text-gray-600 hover:text-gray-900 hover:shadow-lg'
+              ? 'bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-blue-500/25' 
+              : 'bg-white/90 backdrop-blur-sm text-gray-700 hover:text-blue-600 hover:shadow-xl border border-gray-100'
           )}
           title={t('studio.title')}
         >
           <AdjustmentsHorizontalIcon className="w-5 h-5" />
+          <span className="absolute right-full mr-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+            AI工作室
+          </span>
         </button>
       </div>
       

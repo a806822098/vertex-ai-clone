@@ -1,0 +1,37 @@
+/* Z-Index 层级管理系统 - Apple Design Standards */
+
+:root {
+  /* 基础层级 */
+  --z-base: 1;
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-fixed: 30;
+  
+  /* 浮动元素 */
+  --z-action-buttons: 35;
+  --z-tooltip: 40;
+  
+  /* 侧边面板 */
+  --z-side-panel: 45;
+  
+  /* 模态框 */
+  --z-modal-backdrop: 50;
+  --z-modal: 51;
+  
+  /* 系统级 */
+  --z-notification: 60;
+  --z-system: 70;
+}
+
+/* 工具类 */
+.z-base { z-index: var(--z-base); }
+.z-dropdown { z-index: var(--z-dropdown); }
+.z-sticky { z-index: var(--z-sticky); }
+.z-fixed { z-index: var(--z-fixed); }
+.z-action-buttons { z-index: var(--z-action-buttons); }
+.z-tooltip { z-index: var(--z-tooltip); }
+.z-side-panel { z-index: var(--z-side-panel); }
+.z-modal-backdrop { z-index: var(--z-modal-backdrop); }
+.z-modal { z-index: var(--z-modal); }
+.z-notification { z-index: var(--z-notification); }
+.z-system { z-index: var(--z-system); }

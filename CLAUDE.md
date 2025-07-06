@@ -75,45 +75,6 @@ The application uses a component-based architecture with state management via Zu
 - **Streaming support** for real-time responses
 - API connection testing built into model configuration
 
-### Styling
-- Tailwind CSS v3 for all styling
-- Utility classes only, no custom CSS
-- **Consistent dark theme** (Vertex AI inspired)
-- Custom code highlighting theme
-
-## Recent Improvements
-
-### 🎯 Enhanced Features
-1. **Streaming Response Support**
-   - Real-time message streaming for supported APIs
-   - Toggle in AI Studio panel
-   - Visual streaming indicator
-
-2. **Markdown & Code Highlighting**
-   - Full GFM (GitHub Flavored Markdown) support
-   - Syntax highlighting for code blocks
-   - Copy button for code snippets
-   - Custom dark theme for code
-
-3. **Updated Model Support**
-   - Added Gemini 2.0/2.5 series models
-   - Accurate context windows (up to 2M tokens)
-   - Proper pricing information
-
-4. **UI/UX Improvements**
-   - Unified dark theme across all components
-   - Message timestamps with relative time
-   - Copy message functionality
-   - Enhanced keyboard shortcuts (Enter/Cmd+Enter)
-   - Better loading animations
-   - Improved error handling
-
-5. **Prompt Library Integration**
-   - Fully functional prompt management
-   - Import/export capabilities
-   - Search and filtering
-   - Dark theme consistency
-
 ## Project Structure
 
 ```
@@ -131,9 +92,7 @@ src/
 
 ## Development Notes
 
-- Pure frontend application (no backend)
 - Vite for fast HMR and builds
-- React 19 with latest features
 - ESLint configured for React development
 - Production-ready code quality
 
@@ -144,44 +103,12 @@ src/
 - Encrypted data stored in localStorage
 - Password hashing with PBKDF2 for key derivation
 
-## Performance Optimizations
-
-- Efficient re-renders with proper React patterns
-- Debounced search inputs
-- Lazy loading for heavy components
-- Optimized bundle size with tree shaking
-
 ## Future Enhancements
 
 - [ ] Model fine-tuning interface
 - [ ] Agent Builder functionality
 
-# 🎯 **新增**产品愿景
-不再是Google Vertex AI的复制品，而是为中国开发者打造的"终极AI中转站管理器"
-
-## 🏗️ 核心设计原则
-- **本土化优先**: 100%中文界面，符合国内开发者习惯
-- **极致自由度**: 所有参数可配置，支持任意模型和endpoint
-
-## 🎯 最大目标
-自定义API中转站配置
-
-## 🔍 当前问题诊断
-1. **问题**: 模型选择器中"自定义"为空，无添加入口
-2. **原因**: 硬编码了provider列表，未实现动态配置
-3. **影响文件**: 
-   - src/components/ModelSelector.tsx (或类似)
-   - src/providers/models.ts (或类似)
-   - src/store/configStore.ts (或类似)
-
-## 📋 精确需求规格
-### 必须删除的内容
-- 所有预设provider (OpenAI, Anthropic, Google)
-- 所有价格相关UI和逻辑
-- 所有benchmark相关功能
-- 所有使用统计功能
-
-### ✅ 已实现的功能
+### ✅ 已实现的中转调用功能
 1. **自定义模型配置界面**
    ```javascript
    // 模型数据结构 (src/stores/modelStore.js)
@@ -246,33 +173,146 @@ const MODEL_STORAGE_KEY = 'vertex-ai-clone-models';
 }
 ```
 
-## 🎨 UI规范
-- 主色调: #1a1a1a (深色背景)
-- 强调色: #3b82f6 (蓝色按钮)
-- 字体: Inter, "Microsoft YaHei"
-- 所有文本必须中文
-- 使用 Tailwind CSS classes
+# Vertex AI Clone - **本次任务最高权重**：UI细节完美主义手册
 
-## ✅ 验收标准 (已完成)
-1. ✅ 完全移除所有预设provider
-2. ✅ 可以添加/编辑/删除自定义模型
-3. ✅ 配置数据本地持久化 (使用Zustand + localStorage)
-4. ✅ UI完全中文化
-5. ✅ 支持参数范围自定义
+## 🔍 UI问题诊断清单
 
-## 🔧 核心功能模块
-1. **中转站配置中心**
-   - 可视化添加/编辑/删除API配置
-   - 支持批量导入导出配置
-   - 配置模板编辑（用户自行预设其常用的中转站）
+### 已知严重问题
+1. **图标遮挡问题**
+   - 位置：主界面右下角
+   - 症状：“当前模型：xxx”被"打开提示词库"按钮及文字遮挡
+   - 影响：功能可见性受损，用户体验极差
+   - 优先级：P0 - 必须立即修复
 
-2. **模型必须能做到自由选择**
-   - 动态加载模型列表
-   - 自定义模型参数范围
-   - 模型能力标签系统
-   - 流式响应优化
-   - 对话历史云同步
+2. **功能不对称问题**
+   - 位置：模型管理界面（配置自定义AI模型）
+   - 症状：只有"添加"没有"删除"功能
+   - 影响：模型列表会无限增长，无法管理
+   - 优先级：P0 - 核心功能缺失
 
+### UI设计原则
+- **视觉层级**: 重要元素永不被遮挡
+- **功能完整性**: CRUD操作必须完整
+- **交互一致性**: 相似功能相似操作
+- **错误防护**: 破坏性操作需二次确认
+
+## 🎯 像素级标准
+
+### Z-index 层级规范
+```css
+/* 层级管理规范 */
+--z-dropdown: 1000;
+--z-sticky: 1020;
+--z-fixed: 1030;
+--z-modal-backdrop: 1040;
+--z-modal: 1050;
+--z-popover: 1060;
+--z-tooltip: 1070;
+--z-notification: 1080;
+```
+
+### 间距系统
+- 最小可点击区域: 44x44px (移动端) / 32x32px (桌面端)
+- 元素间最小间距: 8px的倍数
+- 悬浮元素边距: 至少16px远离边界
+
+### 响应式断点
+- 移动端: < 640px
+- 平板: 640px - 1024px  
+- 桌面: > 1024px
+
+## 🔧 UI组件标准
+
+### 按钮组件规范
+```typescript
+interface ButtonProps {
+  variant: 'primary' | 'secondary' | 'danger' | 'ghost';
+  size: 'sm' | 'md' | 'lg';
+  disabled?: boolean;
+  loading?: boolean;
+  icon?: ReactNode;
+  iconPosition?: 'left' | 'right';
+  fullWidth?: boolean;
+  // 防止遮挡的关键属性
+  zIndex?: number;
+  priority?: 'high' | 'normal' | 'low';
+}
+```
+
+### 模型管理组件需求
+```typescript
+interface ModelManagerProps {
+  models: Model[];
+  onAdd: (model: Model) => void;
+  onEdit: (id: string, model: Model) => void;
+  onDelete: (id: string) => void; // 必须实现！
+  onReorder?: (models: Model[]) => void;
+}
+```
+
+## 🚨 UI测试检查点
+
+1. **遮挡测试**
+   - 所有浮动元素是否正确分层
+   - 响应式布局下是否有元素重叠
+   - 动画过程中是否产生遮挡
+
+2. **功能完整性测试**
+   - 每个列表都有增删改查
+   - 每个表单都有重置和提交
+   - 每个模态框都有关闭方式
+
+3. **可访问性测试**
+   - 键盘导航是否完整
+   - 屏幕阅读器是否友好
+   - 对比度是否符合WCAG标准
+
+## 💎 UI优化机会
+
+### 快速改进项
+- 使用 CSS Grid 避免浮动元素遮挡
+- 实现智能 tooltip 定位（避开边界）
+- 添加键盘快捷键提升效率
+
+### 创新改进项  
+- 手势操作支持（滑动删除）
+- 批量操作模式
+- 撤销/重做系统
+- 实时协作光标
+
+## 🎨 视觉升级指南
+
+### 现代化配色方案
+```css
+:root {
+  /* 主色调 - 中国红与科技蓝 */
+  --primary-50: #fef2f2;
+  --primary-500: #ef4444;
+  --primary-900: #7f1d1d;
+  
+  /* 暗色模式优先 */
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #171717;
+  --bg-tertiary: #262626;
+  
+  /* 玻璃态效果 */
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+}
+```
+
+### 微动效库
+- 悬停效果: scale(1.02) + 阴影
+- 点击反馈: scale(0.98) + 涟漪
+- 页面过渡: fade + slide
+- 加载动画: 骨架屏 + 脉冲
+
+## 📝 UI改进记录模板
+使用 # 记录每个UI改进：
+# UI修复：[组件名] - [问题描述] - [解决方案]
+# UI创新：[功能名] - [创新点] - [用户价值]
+# UI债务：[技术债] - [影响范围] - [修复计划]
+```
 
 总之，请像真正的工程师一样工作：
 - 遇到问题就修复
