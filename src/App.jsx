@@ -10,6 +10,7 @@ import { PromptProvider } from './prompt-library/context/PromptContext'
 import { I18nProvider } from './hooks/useI18n.jsx'
 import SplashScreen from './components/SplashScreen'
 import { useModelStore } from './stores/modelStore'
+import GlobalErrorBoundary from './components/GlobalErrorBoundary'
 
 function App() {
   const [showSplash, setShowSplash] = useState(true)
@@ -161,11 +162,12 @@ function App() {
   }
 
   return (
-    <I18nProvider>
-      {showSplash ? (
-        <SplashScreen onComplete={() => setShowSplash(false)} />
-      ) : (
-        <PromptProvider>
+    <GlobalErrorBoundary>
+      <I18nProvider>
+        {showSplash ? (
+          <SplashScreen onComplete={() => setShowSplash(false)} />
+        ) : (
+          <PromptProvider>
           <>
           <Toaster 
         position="top-right"
@@ -230,6 +232,7 @@ function App() {
       </PromptProvider>
       )}
     </I18nProvider>
+    </GlobalErrorBoundary>
   )
 }
 

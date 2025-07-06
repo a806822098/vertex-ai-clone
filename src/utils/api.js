@@ -13,7 +13,7 @@ export const API_FORMATS = {
 }
 
 // Import China-friendly presets
-import { CHINA_API_PRESETS } from './apiPresets'
+import { CHINA_API_PRESETS } from './apiPresets.js'
 
 // Re-export for backward compatibility
 export const API_PRESETS = CHINA_API_PRESETS
@@ -348,14 +348,40 @@ export function parseAPIResponse(data, format) {
       case API_FORMATS.GOOGLE:
         return data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response'
       
-      default:
+      default: {
         // Try common response patterns
-        return data.content || 
-               data.message || 
-               data.text || 
-               data.choices?.[0]?.message?.content || 
-               data.result ||
-               JSON.stringify(data)
+        const content = data.content || 
+                       data.message || 
+                       data.text || 
+                       data.choices?.[0]?.message?.content || 
+                       data.result
+        
+        if (content) {
+          return String(content) // 确保返回字符串
+        }
+        
+        // 防御性处理：安全地提取文本内容
+        if (typeof data === 'string') {
+          return data
+        }
+        
+        // 尝试从对象中找到可能的文本内容
+        const possibleTextFields = ['answer', 'response', 'reply', 'output', 'completion']
+        for (const field of possibleTextFields) {
+          if (data[field] && typeof data[field] === 'string') {
+            return data[field]
+          }
+        }
+        
+        // 如果是数组，尝试提取第一个元素
+        if (Array.isArray(data) && data.length > 0 && typeof data[0] === 'string') {
+          return data[0]
+        }
+        
+        // 最后的防御：返回友好的错误消息而不是JSON
+        console.warn('Unexpected API response format:', data)
+        return '抱歉，无法解析API响应。请检查API配置是否正确。'
+      }
     }
   } catch (error) {
     console.error('Error parsing response:', error)
@@ -591,7 +617,7 @@ export async function callAPIStream(endpoint, apiKey, messages, options = {}, on
           try {
             const chunk = JSON.parse(data)
             const content = parseStreamChunk(chunk, format)
-            if (content) {
+            if (content !== '') {
               onChunk(content)
             }
           } catch (e) {
@@ -618,27 +644,27 @@ export async function callAPIStream(endpoint, apiKey, messages, options = {}, on
  * Parse a streaming chunk based on API format
  * @param {Object} chunk - The chunk data
  * @param {string} format - The API format
- * @returns {string|null} The parsed content or null
+ * @returns {string} The parsed content or empty string
  */
 function parseStreamChunk(chunk, format) {
   switch (format) {
     case API_FORMATS.OPENAI:
-      return chunk.choices?.[0]?.delta?.content || null
+      return chunk.choices?.[0]?.delta?.content || ''
       
     case API_FORMATS.ANTHROPIC:
       if (chunk.type === 'content_block_delta') {
-        return chunk.delta?.text || null
+        return chunk.delta?.text || ''
       }
-      return null
+      return ''
       
     case API_FORMATS.GOOGLE:
-      return chunk.candidates?.[0]?.content?.parts?.[0]?.text || null
+      return chunk.candidates?.[0]?.content?.parts?.[0]?.text || ''
       
     default:
       // Try common patterns
       return chunk.choices?.[0]?.delta?.content || 
              chunk.delta?.text || 
              chunk.text || 
-             null
+             ''
   }
 }

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ClipboardDocumentIcon, CheckIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
-import MessageContent from './MessageContent'
+import SafeMessageContent from './SafeMessageContent'
 
 function MessageWrapper({ message, isStreaming }) {
   const [copied, setCopied] = useState(false)
@@ -76,7 +76,7 @@ function MessageWrapper({ message, isStreaming }) {
         </div>
         
         {/* Message content */}
-        <MessageContent 
+        <SafeMessageContent 
           content={message.content} 
           isStreaming={isStreaming}
         />

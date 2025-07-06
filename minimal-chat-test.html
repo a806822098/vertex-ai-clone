@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>最小聊天测试</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .chat-container {
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 400px;
+            background: #0a0a0a;
+        }
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .user-message {
+            background: #3b82f6;
+            text-align: right;
+        }
+        .assistant-message {
+            background: #333;
+            text-align: left;
+        }
+        .input-area {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #333;
+            background: #222;
+            color: #fff;
+        }
+        button {
+            padding: 10px 20px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+        .status {
+            margin-top: 10px;
+            padding: 10px;
+            background: #262626;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .error {
+            color: #f87171;
+        }
+        .success {
+            color: #4ade80;
+        }
+    </style>
+</head>
+<body>
+    <h1>🚑 最小聊天功能测试</h1>
+    
+    <div class="status" id="status">
+        状态：等待配置API...
+    </div>
+    
+    <div style="margin: 20px 0;">
+        <label>API端点：</label>
+        <input type="text" id="apiEndpoint" placeholder="https://api.openai.com/v1/chat/completions" style="width: 100%; margin: 5px 0;">
+        <label>API密钥：</label>
+        <input type="password" id="apiKey" placeholder="sk-xxx" style="width: 100%; margin: 5px 0;">
+        <button onclick="testConnection()">测试连接</button>
+    </div>
+    
+    <div class="chat-container" id="chatContainer">
+        <div class="message assistant-message">
+            欢迎！请先配置API，然后开始对话。
+        </div>
+    </div>
+    
+    <div class="input-area">
+        <input type="text" id="messageInput" placeholder="输入消息..." onkeypress="if(event.key==='Enter') sendMessage()">
+        <button onclick="sendMessage()">发送</button>
+    </div>
+
+    <script>
+        let messages = [];
+        
+        function updateStatus(message, isError = false) {
+            const status = document.getElementById('status');
+            status.textContent = '状态：' + message;
+            status.className = isError ? 'status error' : 'status success';
+        }
+        
+        function addMessage(role, content) {
+            const container = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = role === 'user' ? 'message user-message' : 'message assistant-message';
+            messageDiv.textContent = content;
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        async function testConnection() {
+            const endpoint = document.getElementById('apiEndpoint').value;
+            const apiKey = document.getElementById('apiKey').value;
+            
+            if (!endpoint || !apiKey) {
+                updateStatus('请填写API端点和密钥', true);
+                return;
+            }
+            
+            updateStatus('测试连接中...');
+            
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-3.5-turbo',
+                        messages: [{ role: 'user', content: 'test' }],
+                        max_tokens: 10
+                    })
+                });
+                
+                if (response.ok) {
+                    updateStatus('连接成功！可以开始对话了');
+                } else {
+                    const error = await response.text();
+                    updateStatus('连接失败：' + response.status, true);
+                    console.error(error);
+                }
+            } catch (error) {
+                updateStatus('网络错误：' + error.message, true);
+            }
+        }
+        
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            const endpoint = document.getElementById('apiEndpoint').value;
+            const apiKey = document.getElementById('apiKey').value;
+            
+            if (!endpoint || !apiKey) {
+                updateStatus('请先配置API', true);
+                return;
+            }
+            
+            // 添加用户消息
+            addMessage('user', message);
+            messages.push({ role: 'user', content: message });
+            input.value = '';
+            
+            updateStatus('发送中...');
+            
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-3.5-turbo',
+                        messages: messages,
+                        max_tokens: 1000,
+                        temperature: 0.7
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    // 解析响应 - 极度防御性
+                    let content = '无响应';
+                    
+                    if (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) {
+                        content = data.choices[0].message.content;
+                    } else if (data.content) {
+                        content = data.content;
+                    } else if (data.message) {
+                        content = data.message;
+                    } else if (data.text) {
+                        content = data.text;
+                    }
+                    
+                    // 确保是字符串
+                    content = String(content);
+                    
+                    addMessage('assistant', content);
+                    messages.push({ role: 'assistant', content: content });
+                    updateStatus('发送成功');
+                } else {
+                    const error = await response.text();
+                    updateStatus('API错误：' + response.status, true);
+                    addMessage('assistant', '错误：' + error);
+                }
+            } catch (error) {
+                updateStatus('发送失败：' + error.message, true);
+                addMessage('assistant', '网络错误：' + error.message);
+            }
+        }
+        
+        // 预填充常用API
+        document.getElementById('apiEndpoint').value = 'https://api.openai.com/v1/chat/completions';
+    </script>
+</body>
+</html>

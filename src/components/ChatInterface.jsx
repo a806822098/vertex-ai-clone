@@ -138,11 +138,14 @@ function ChatInterface({ apiEndpoint, apiKey, advancedApiConfig, conversationId,
           [...messages, userMessage],
           apiOptions,
           (chunk) => {
-            setMessages(prev => prev.map(msg => 
-              msg.id === assistantMessageId 
-                ? { ...msg, content: msg.content + chunk }
-                : msg
-            ))
+            // Only append chunk if it's not null or undefined
+            if (chunk != null && chunk !== '') {
+              setMessages(prev => prev.map(msg => 
+                msg.id === assistantMessageId 
+                  ? { ...msg, content: msg.content + chunk }
+                  : msg
+              ))
+            }
           }
         )
       } else {
